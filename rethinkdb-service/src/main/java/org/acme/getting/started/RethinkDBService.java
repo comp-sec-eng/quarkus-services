@@ -1,49 +1,46 @@
 package org.acme.getting.started;
 
-import com.rethinkdb.RethinkDB;
-import com.rethinkdb.net.Connection;
+// RethinkDB imports
+import com.rethinkdb.RethinkDB ;
+import com.rethinkdb.net.Connection ; 
+// Jakarta EE imports 
+import jakarta.enterprise.context.ApplicationScoped ;
+import jakarta.inject.Inject ;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
-
+// If we, annotate a class with @ApplicationScoped in CDI (Contexts and Dependency Injection), 
+// CDI ensures that only one instance of that class is created per application context.
 
 @ApplicationScoped
 public class RethinkDBService {
 
     @Inject
-    RethinkDB r;  
+    private RethinkDB  r ;
 
-    private String db = "domaindb" ;
-    private Connection conn;
+    // RethinkDB connection constants
+    private static final String DBNAME = "domaindb" ;
+    private static final String DBHOST = "localhost" ;
+    private static final int    DBPORT = 28015 ;
+    
+    // RethinkDB connection
+    private static Connection conn ;
 
-/* public boolean connect() {
-    try {
+     
+    // Methos to create a database connection
+    public void connect() {
         conn = r.connection()
-                .hostname("localhost")
-                .port(28015)
-                .connect();
-        return conn.isOpen();
-    } catch (Exception e) {
-        System.err.println("Failed to connect to RethinkDB: " + e.getMessage());
-        return false;
-    }
-} */
-
-	public void connect( ) {
-			conn = r.connection( )
-					.hostname( "localhost" )
-					.port( 28015 )
-					.connect( );
-	}
-
-    public void createTable( String table )  {
-          r.db( db ).tableCreate( table ).run( conn ) ;
+                .hostname( DBHOST )
+                .port( DBPORT )
+                .connect() ;
     }
 
-    public void insertTable( String table, String value ) {
-          r.db( db ).table( table ).insert( r.hashMap( "domain_name", value ) ).run( conn ) ;
+    // Method to create a table via the table parameter
+    public void createTable( String table ) {
+        r.db( DBNAME ).tableCreate( table ).run( conn ) ;
     }
- 
+
+    // Method to insert a table
+    public void insertTable(String table, String value) {
+        r.db( DBNAME ).table(table).insert( r.hashMap("domain_name", value) ).run( conn ) ;
+    }
+
 }
-
