@@ -3,34 +3,47 @@ package org.acme.getting.started;
 import com.rethinkdb.RethinkDB;
 import com.rethinkdb.net.Connection;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+
 
 @ApplicationScoped
 public class RethinkDBService {
 
     @Inject
-    RethinkDB r; // RethinkDB instance
+    RethinkDB r;  
 
+    private String db = "domaindb" ;
     private Connection conn;
 
-    public void connect() {
+/* public boolean connect() {
+    try {
         conn = r.connection()
-                .hostname(System.getProperty("rethinkdb.host", "localhost"))
-                .port(Integer.parseInt(System.getProperty("rethinkdb.port", "28015")))
-                .db(System.getProperty("rethinkdb.db"))
-                .user(System.getProperty("rethinkdb.user", "admin"),
-                      System.getProperty("rethinkdb.password", ""))
+                .hostname("localhost")
+                .port(28015)
                 .connect();
+        return conn.isOpen();
+    } catch (Exception e) {
+        System.err.println("Failed to connect to RethinkDB: " + e.getMessage());
+        return false;
+    }
+} */
+
+	public void connect( ) {
+			conn = r.connection( )
+					.hostname( "localhost" )
+					.port( 28015 )
+					.connect( );
+	}
+
+    public void createTable( String table )  {
+          r.db( db ).tableCreate( table ).run( conn ) ;
     }
 
-    public Connection getConnection() {
-        if (conn == null || !conn.isOpen()) {
-            connect();
-        }
-        return conn;
+    public void insertTable( String table, String value ) {
+          r.db( db ).table( table ).insert( r.hashMap( "domain_name", value ) ).run( conn ) ;
     }
-
-    // Optionally, methods to close connection or other database operations
+ 
 }
 
