@@ -5,4 +5,5 @@ git commit -m "Setup and initial commit"
 git branch -M main
 git remote add origin https://github.com/comp-sec-eng/quarkus-services.git
 git push -u origin main
-
+git add -A examples
+git push
