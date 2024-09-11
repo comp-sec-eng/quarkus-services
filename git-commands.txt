@@ -1,0 +1,8 @@
+echo "# quarkus-services" >> README.md
+git init
+git add README.md
+git commit -m "Setup and initial commit"
+git branch -M main
+git remote add origin https://github.com/comp-sec-eng/quarkus-services.git
+git push -u origin main
+
